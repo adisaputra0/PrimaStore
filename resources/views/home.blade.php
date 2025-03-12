@@ -10,5 +10,6 @@
 </head>
 <body>
     <h1 class=" text-red-500">Welcome to Home Page!</h1>
+    <a href="{{ route('payment.index') }}" class="text-blue-500">Payment</a>
 </body>
 </html>

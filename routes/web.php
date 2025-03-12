@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Webcontroller;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,3 +12,6 @@ Route::get('/home', function () {
 Route::get('/seller/register', function () {
     return view('auth.register_seller');
 });
+
+//payments
+Route::resource('payment', Webcontroller::class);
