@@ -15,3 +15,5 @@ Route::get('/seller/register', function () {
 
 //payments
 Route::resource('payment', Webcontroller::class);
+Route::post('/payment_post', [Webcontroller::class,'payment_post']);
+Route::post('/get-snap-token', [Webcontroller::class, 'getSnapToken'])->name('getSnapToken');

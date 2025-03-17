@@ -1,58 +1,62 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="id">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
-    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="SB-Mid-client-DjaD6weHTUXwadlp"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran</title>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('CLIENT_KEY') }}"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+    <div class="bg-white p-8 rounded shadow-md w-96">
+        <h2 class="text-xl font-bold mb-4">Pembayaran</h2>
 
-<body>
-    <button id="pay-button">Pay!</button>
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-700">Nama:</label>
+            <input type="text" id="name" value="{{ auth()->user()->name }}" readonly class="mt-1 p-2 w-full border rounded">
+        </div>
 
-    <form action="" method="post" id="submit_form">
-        @csrf
-        <input type="hidden" name="json" id="json_callback">
-    </form>
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+            <input type="text" id="email" value="{{ auth()->user()->email }}" readonly class="mt-1 p-2 w-full border rounded">
+        </div>
 
-    <script type="text/javascript">
-        // For example trigger on button clicked, or any time you need
-        var payButton = document.getElementById('pay-button');
-        payButton.addEventListener('click', function () {
-            // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
-            window.snap.pay('{{ $snap_token }}', {
-                onSuccess: function (result) {
-                    /* You may add your own implementation here */
-                    alert("payment success!"); console.log(result);
-                    send_response_to_form(result);
-                },
-                onPending: function (result) {
-                    /* You may add your own implementation here */
-                    alert("wating your payment!"); console.log(result);
-                    send_response_to_form(result);
-                },
-                onError: function (result) {
-                    /* You may add your own implementation here */
-                    alert("payment failed!"); console.log(result);
-                    send_response_to_form(result);
-                },
-                onClose: function () {
-                    /* You may add your own implementation here */
-                    alert('you closed the popup without finishing the payment');
+        <div class="mb-4">
+            <label for="phone" class="block text-sm font-medium text-gray-700">Nomor Telepon:</label>
+            <input type="text" id="phone" name="phone" value="08123456789" class="mt-1 p-2 w-full border rounded">
+        </div>
 
-                }
-            })
-        });
+        <div class="mb-4">
+            <label for="items" class="block text-sm font-medium text-gray-700">Barang:</label>
+            <select id="items" class="mt-1 p-2 w-full border rounded">
+                <option value='{"id":"ITEM-1","price":5000,"quantity":1,"name":"Apple","subtotal":5000}'>Apple - Rp5.000</option>
+                <option value='{"id":"ITEM-2","price":7000,"quantity":2,"name":"Jeruk","subtotal":14000}'>Jeruk - Rp7.000</option>
+            </select>
+        </div>
 
-        function send_response_to_form(result) {
-            document.getElementById('json_callback').value = JSON.stringify(result);
-            alert("Data terkirim ke backend:\n" + document.getElementById('json_callback').value);
-            document.getElementById('submit_form').submit(); // Form otomatis dikirim ke backend
-        }
+        <button id="payButton" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Bayar</button>
+    </div>
+
+    <script>
+    document.getElementById('payButton').addEventListener('click', function() {
+        const items = [JSON.parse(document.getElementById('items').value)];
+        const phone = document.getElementById('phone').value;
+
+        fetch('/get-snap-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+            body: JSON.stringify({ items: items, phone: phone })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.snap_token) {
+                window.snap.pay(data.snap_token);
+            } else {
+                alert('Gagal mendapatkan token pembayaran.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
     </script>
 </body>
-
 </html>
