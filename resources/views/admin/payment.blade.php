@@ -29,8 +29,8 @@
         <div class="mb-4">
             <label for="items" class="block text-sm font-medium text-gray-700">Barang:</label>
             <select id="items" class="mt-1 p-2 w-full border rounded">
-                <option value='{"id":"ITEM-1","price":5000,"quantity":1,"name":"Apple","subtotal":5000}'>Apple - Rp5.000</option>
-                <option value='{"id":"ITEM-2","price":7000,"quantity":2,"name":"Jeruk","subtotal":14000}'>Jeruk - Rp7.000</option>
+                <option value='{"id":"ITEM-1","price":10000,"quantity":1,"name":"Apple","subtotal":10000}'>Apple - Rp10.000</option>
+                <option value='{"id":"ITEM-2","price":14000,"quantity":2,"name":"Jeruk","subtotal":14000}'>Jeruk - Rp14.000</option>
             </select>
         </div>
 
@@ -38,25 +38,44 @@
     </div>
 
     <script>
-    document.getElementById('payButton').addEventListener('click', function() {
-        const items = [JSON.parse(document.getElementById('items').value)];
-        const phone = document.getElementById('phone').value;
+        document.getElementById('payButton').addEventListener('click', function() {
+            const items = [JSON.parse(document.getElementById('items').value)];
+            const phone = document.getElementById('phone').value;
 
-        fetch('/get-snap-token', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-            body: JSON.stringify({ items: items, phone: phone })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.snap_token) {
-                window.snap.pay(data.snap_token);
-            } else {
-                alert('Gagal mendapatkan token pembayaran.');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-    </script>
+            fetch('/get-snap-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                body: JSON.stringify({ items: items, phone: phone })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.snap_token) {
+                    window.snap.pay(data.snap_token, {
+                        onSuccess: function(result) {
+                            fetch('/payment_post', { // Kirim ke backend
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                                body: JSON.stringify(result)
+                            })
+                            .then(res => res.json())
+                            .then(response => {
+                                alert(response.success || response.error);
+                                window.location.href = '/';
+                            });
+                        },
+                        onPending: function(result) {
+                            console.log('Pending:', result);
+                        },
+                        onError: function(result) {
+                            console.log('Error:', result);
+                        }
+                    });
+                } else {
+                    alert('Gagal mendapatkan token pembayaran.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+        </script>
 </body>
 </html>

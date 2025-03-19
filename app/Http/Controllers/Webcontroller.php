@@ -17,90 +17,93 @@ class WebController extends Controller
     }
 
     public function getSnapToken(Request $request)
-    {
-        // Config::$serverKey = env('SERVER_KEY');
-        // Config::$isProduction = false;
-        // Config::$isSanitized = true;
-        // Config::$is3ds = true;
-        dd($request->all());
+{
+    Config::$serverKey = env('SERVER_KEY');
+    Config::$isProduction = false;
+    Config::$isSanitized = true;
+    Config::$is3ds = true;
 
-        // $user = Auth::user();
-        // $items = json_decode($request->input('items'), true); // Ambil data items dari request
+    $user = Auth::user();
+    $phone = $request->input('phone');
+    $items = $request->input('items');
 
-        // if (!is_array($items) || empty($items)) {
-        //     return response()->json(['error' => 'Item tidak boleh kosong'], 400);
-        // }
+    $orderId = "ORDER-" . rand(100000, 999999);
+    $grossAmount = collect($items)->sum('subtotal');
 
-        // // Log untuk debugging
-        // Log::info('Item Details:', $items);
+    $params = [
+        'transaction_details' => [
+            'order_id' => $orderId,
+            'gross_amount' => $grossAmount,
+        ],
+        'item_details' => $items,
+        'customer_details' => [
+            'first_name' => $user->name,
+            'email' => $user->email,
+            'phone' => $phone,
+        ],
+    ];
 
-        // $grossAmount = array_sum(array_map(fn($item) => $item['subtotal'] ?? 0, $items));
-
-        // if ($grossAmount < 0.01) {
-        //     return response()->json(['error' => 'Total pembayaran harus lebih dari 0'], 400);
-        // }
-
-        // $params = [
-        //     'transaction_details' => [
-        //         'order_id' => "ORDER-" . rand(100000, 999999),
-        //         'gross_amount' => $grossAmount,
-        //     ],
-        //     'item_details' => $items,
-        //     'customer_details' => [
-        //         'first_name' => $user->name,
-        //         'email' => $user->email,
-        //         'phone' => $request->input('phone', '08123456789'),
-        //     ],
-        // ];
-
-        // try {
-        //     $snapToken = Snap::getSnapToken($params);
-        //     return response()->json(['snap_token' => $snapToken]);
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => 'Gagal mendapatkan token: ' . $e->getMessage()], 500);
-        // }
-        // $jsonData = $request->input('json');
-
-        // // Debugging untuk melihat tipe data yang dikirim
-        // if (is_array($jsonData)) {
-        //     return response()->json([
-        //         'message' => 'Data sudah dalam bentuk array',
-        //         'data' => $jsonData
-        //     ]);
-        // } else {
-        //     $decoded = json_decode($jsonData, true);
-        //     return response()->json([
-        //         'message' => 'Data setelah json_decode',
-        //         'data' => $decoded
-        //     ]);
-        // }
+    try {
+        $snapToken = Snap::getSnapToken($params);
+        return response()->json(['snap_token' => $snapToken, 'order_id' => $orderId]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Gagal mendapatkan token: ' . $e->getMessage()], 500);
     }
+}
 
     public function payment_post(Request $request)
     {
-        $json = $request->input('json'); // Gunakan input langsung, tidak perlu get()
+        $json = $request->all();
 
-        if (!is_array($json)) {
-            return response()->json(['error' => 'Data transaksi tidak valid'], 400);
+        // Log untuk debugging
+        Log::info('Data masuk ke payment_post:', $json);
+
+        if (!isset($json['order_id'])) {
+            return redirect('/')->with('alert-failed', 'Order ID tidak ditemukan.');
         }
 
-        $order = new Order();
-        $order->order_id = $json['order_id'] ?? null;
-        $order->transaction_id = $json['transaction_id'] ?? null;
-        $order->gross_amount = $json['gross_amount'] ?? 0;
+        // Cek apakah order_id sudah ada di database
+        $order = Order::where('order_id', $json['order_id'])->first();
+
+        if (!$order) {
+            // Jika tidak ditemukan, buat baru
+            $order = new Order();
+            $order->order_id = $json['order_id'];
+        }
+
+         // Ambil data VA Number jika ada
+    $vaNumber = null;
+    $bankName = null;
+
+    if (isset($json['va_numbers'][0])) {
+        $vaNumber = $json['va_numbers'][0]['va_number'] ?? null;
+        $bankName = $json['va_numbers'][0]['bank'] ?? null;
+    }
+
+        // Isi data dari Midtrans
+        $order->transaction_id = $json['transaction_id'] ?? $order->transaction_id;
+        $order->gross_amount = $json['gross_amount'] ?? $order->gross_amount;
         $order->payment_type = $json['payment_type'] ?? 'unknown';
         $order->transaction_status = $json['transaction_status'] ?? 'pending';
         $order->fraud_status = $json['fraud_status'] ?? null;
         $order->payment_code = $json['payment_code'] ?? null;
-        $order->va_number = $json['va_numbers'][0]['va_number'] ?? null;
-        $order->bank = $json['va_numbers'][0]['bank'] ?? null;
+        $order->va_number = $vaNumber ?? $order->va_number;
+        $order->bank = $bankName ?? $order->bank;
         $order->pdf_url = $json['pdf_url'] ?? null;
         $order->transaction_time = $json['transaction_time'] ?? now();
-        $order->name = Auth::user()->name;
-        $order->email = Auth::user()->email;
+        $order->name = $json['name'] ?? 'unknown';
+        $order->email = $json['email'] ?? 'unknown';
 
-        return $order->save()
-            ? redirect(url('/'))->with('alert-success', 'Order berhasil dibuat')
-            : redirect(url('/'))->with('alert-failed', 'Terjadi kesalahan');
+        // Simpan data
+        if ($order->save()) {
+            return redirect('/')->with('alert-success', 'Order berhasil disimpan.');
+        } else {
+            return redirect('/')->with('alert-failed', 'Terjadi kesalahan saat menyimpan order.');
+        }
+
+
     }
+
+
+
 }
