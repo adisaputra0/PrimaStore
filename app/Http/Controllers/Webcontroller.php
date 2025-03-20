@@ -72,8 +72,8 @@ class WebController extends Controller
         }
 
          // Ambil data VA Number jika ada
-    $vaNumber = null;
-    $bankName = null;
+        $vaNumber = null;
+        $bankName = null;
 
     if (isset($json['va_numbers'][0])) {
         $vaNumber = $json['va_numbers'][0]['va_number'] ?? null;
@@ -91,8 +91,8 @@ class WebController extends Controller
         $order->bank = $bankName ?? $order->bank;
         $order->pdf_url = $json['pdf_url'] ?? null;
         $order->transaction_time = $json['transaction_time'] ?? now();
-        $order->name = $json['name'] ?? 'unknown';
-        $order->email = $json['email'] ?? 'unknown';
+        $order->name = Auth::user()->name;
+        $order->email = Auth::user()->email;
 
         // Simpan data
         if ($order->save()) {
