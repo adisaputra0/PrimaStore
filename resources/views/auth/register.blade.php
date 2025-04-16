@@ -8,9 +8,9 @@
                 <h2 class="font-bold text-2xl text-[#002074] dark:text-white">Register</h2>
                 <p class="text-sm mt-4 dark:text-white">Silahkan isi data diri lengkap</p>
 
-                <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4">
+                <form method="POST" action="{{ route('register') }}" class="flex flex-col gap-4">
                     @csrf
-                    <input class="p-2 mt-8 rounded border border-gray-300 bg-white" type="text" name="username" placeholder="Username" required autofocus>
+                    <input class="p-2 mt-8 rounded border border-gray-300 bg-white" type="text" name="name" placeholder="Name" required autofocus>
                     <input class="p-2 rounded border border-gray-300 bg-white" type="text" name="email" placeholder="Email" required>
                     <div class="relative">
                         <input class="p-2 rounded border border-gray-300 bg-white w-full" type="password" name="password" placeholder="Password" required>

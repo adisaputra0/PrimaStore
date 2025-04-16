@@ -6,11 +6,11 @@
             <!-- Left - Form -->
             <div class="md:w-1/2 px-10">
                 <h2 class="font-bold text-2xl text-[#002074] dark:text-white">Login</h2>
-                <p class="text-sm mt-4 dark:text-white">Silahkan masukkan username dan password</p>
+                <p class="text-sm mt-4 dark:text-white">Silahkan masukkan email dan password</p>
 
-                <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4">
+                <form method="POST" action="{{ route('post.login') }}" class="flex flex-col gap-4">
                     @csrf
-                    <input class="p-2 mt-8 rounded border border-gray-300 bg-white" type="text" name="username" placeholder="Username" required autofocus>
+                    <input class="p-2 mt-8 rounded border border-gray-300 bg-white" type="text" name="email" placeholder="Email" required autofocus>
                     <div class="relative">
                         <input class="p-2 rounded border border-gray-300 bg-white w-full" type="password" name="password" placeholder="Password" required>
                         <svg onclick="showPassword('password')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="cursor-pointer bi bi-eye absolute top-1/2 right-3 -translate-y-1/2" viewBox="0 0 16 16">
