@@ -12,7 +12,9 @@ Route::get('/products', [UserController::class, "products"])->name("products");
 Route::get('/coming-soon', [UserController::class, "coming_soon"])->name("coming_soon");
 
 //Admin
-Route::get('/dashboard', [AdminController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', [AdminController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [AdminController::class, "index"])->name('dashboard');
+Route::get('/users', [AdminController::class, "users"])->name('users');
 
 //Auth
 Route::get('/seller/register', [AuthController::class, "register_seller"])->name("regitser-seller");
