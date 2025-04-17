@@ -21,7 +21,10 @@ if (localStorage.getItem('color-theme')) {
         document.documentElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
     }
-} 
+} else{
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('color-theme', 'light');
+}
 
 function changeMode(){
     if (localStorage.getItem('color-theme')) {
