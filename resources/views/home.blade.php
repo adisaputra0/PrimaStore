@@ -1,5 +1,5 @@
 <x-user>
-    
+
     <!-- Start block -->
     <section class="bg-white dark:bg-gray-900">
         <div class="grid max-w-screen-xl px-4 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-28" data-aos="fade" data-aos-duration="700">
@@ -9,10 +9,10 @@
                 <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
                     <a href="https://github.com/themesberg/landwind" class="inline-flex items-center justify-center w-full px-5 py-3 text-sm font-medium text-center text-gray-900 border border-gray-200 rounded-lg sm:w-auto hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800 gap-2">
                         <i class="fa-solid fa-cart-shopping"></i> Lihat Produk
-                    </a> 
+                    </a>
                     <a href="{{ route('register') }}" class="inline-flex items-center justify-center w-full px-5 py-3 text-sm font-medium text-center text-gray-900 border border-gray-200 rounded-lg sm:w-auto hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800 gap-2">
                         <i class="fa-solid fa-right-to-bracket"></i> Daftar Sekarang
-                    </a> 
+                    </a>
                     {{-- <a href="https://www.figma.com/community/file/1125744163617429490" class="inline-flex items-center justify-center w-full px-5 py-3 mb-2 mr-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:w-auto focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 gap-2">
                         <i class="fa-solid fa-right-to-bracket"></i> Get Started
                     </a> --}}
@@ -20,7 +20,7 @@
             </div>
             <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
                 <img src="{{ asset('images/hero.png') }}" alt="hero image">
-            </div>                
+            </div>
         </div>
     </section>
     <!-- End block -->
@@ -116,7 +116,7 @@
         </div>
       </section>
     <!-- End block -->
-    
+
     <!-- Start block -->
     <section class="bg-white dark:bg-gray-900">
         <div class="items-center max-w-screen-xl px-4 py-8 mx-auto lg:grid lg:grid-cols-4 lg:gap-16 xl:gap-24 lg:py-24 lg:px-6" data-aos="fade" data-aos-duration="700">
@@ -171,7 +171,7 @@
             <figure class="max-w-screen-md mx-auto">
                 <svg class="h-12 mx-auto mb-3 text-gray-400 dark:text-gray-600" viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z" fill="currentColor"/>
-                </svg> 
+                </svg>
                 <blockquote>
                     <p class="text-xl font-medium text-gray-900 md:text-2xl dark:text-white">"PrimaStore hadir untuk memberdayakan kreativitas mahasiswa Primakara dan menghubungkannya dengan dunia. Mari tumbuh, berkarya, dan menginspirasi bersama."</p>
                 </blockquote>
@@ -287,8 +287,8 @@
                             </p>
                         </div>
                     </div>
-                </div> 
-            </div>               
+                </div>
+            </div>
         </div>
     </section>
     <!-- End block -->
@@ -304,4 +304,4 @@
     </section>
     <!-- End block -->
 </x-user>
->>>>>>> origin/frontend
+
