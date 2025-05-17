@@ -11,6 +11,7 @@ use Laravel\Reverb\Events\MessageSent as EventsMessageSent;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 //Guest
@@ -22,7 +23,7 @@ Route::get('/coming-soon', [UserController::class, "coming_soon"])->name("coming
 //Admin
 // Route::get('/dashboard', [AdminController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/dashboard', [AdminController::class, "index"])->name('dashboard')->middleware(['auth', 'verified']);
-Route::get('/users', [AdminController::class, "users"])->name('users')->middleware(['auth', 'verified']);
+Route::get('/users', [UsersController::class, "users"])->name('users')->middleware(['auth', 'verified']);
 
 //Auth
 Route::get('/login', [AuthController::class, "login"])->name("login");

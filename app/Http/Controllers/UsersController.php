@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
-    public function index(){
+    public function users(){
 
         $users = Users::latest()->get();
         return view ('admin.users', compact('users'));
