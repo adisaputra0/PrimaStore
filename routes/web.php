@@ -1,17 +1,11 @@
 <?php
 
-use App\Events\Messagesent;
-use Illuminate\Http\Request;
-use App\Events\BidPlaceEvent;
-use App\Events\MessageSentEvent;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Webcontroller;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Laravel\Reverb\Events\MessageSent as EventsMessageSent;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 //Guest
 Route::get('/', [UserController::class, "index"])->name("home");
@@ -53,24 +47,3 @@ Route::post('/email/verification-notification', function (Request $request) {
 
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-
-//payments
-Route::resource('payment', Webcontroller::class);
-Route::post('/payment_post', [Webcontroller::class,'payment_post']);
-Route::post('/get-snap-token', [Webcontroller::class, 'getSnapToken'])->name('getSnapToken');
-
-
-
-//realtime
-Route::get('/message', function(){
-return view('message');
-});
-
-// Route::post('/bid', function(Request $request) {
-//     BidPlaceEvent::dispatch($request->name, $request->price);
-// })->withoutMiddleware(VerifyCsrfToken::class);
-
-Route::post('/send-message', function(Request $request) {
-    MessageSentEvent::dispatch($request->name, $request->price);
-})->withoutMiddleware(VerifyCsrfToken::class);
