@@ -1,4 +1,4 @@
-<x-user>
+<x-guest>
     
     <!-- Start block -->
     <section class="bg-white dark:bg-gray-900">
@@ -1451,4 +1451,4 @@
           </section>
     </section>
     <!-- End block -->
-</x-user>
+</x-guest>

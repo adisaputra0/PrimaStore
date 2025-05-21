@@ -1,22 +1,51 @@
 <?php
 
+use App\Events\Messagesent;
+use Illuminate\Http\Request;
+use App\Events\BidPlaceEvent;
+use App\Events\MessageSentEvent;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Webcontroller;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GuestController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Laravel\Reverb\Events\MessageSent as EventsMessageSent;
 
 //Guest
-Route::get('/', [UserController::class, "index"])->name("home");
-Route::get('/about', [UserController::class, "about"])->name("about");
-Route::get('/products', [UserController::class, "products"])->name("products");
-Route::get('/coming-soon', [UserController::class, "coming_soon"])->name("coming_soon");
+Route::get('/', [GuestController::class, "index"])->name("home");
+Route::get('/about', [GuestController::class, "about"])->name("about");
+Route::get('/products', [GuestController::class, "products"])->name("products");
+Route::get('/coming-soon', [GuestController::class, "coming_soon"])->name("coming_soon");
 
-//Admin
-// Route::get('/dashboard', [AdminController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/dashboard', [AdminController::class, "index"])->name('dashboard')->middleware(['auth', 'verified']);
-Route::get('/users', [AdminController::class, "users"])->name('users')->middleware(['auth', 'verified']);
+//Dashboard
+Route::get('/dashboard', [UserController::class, "index"])->name('dashboard')->middleware(['auth', 'verified']);
+
+//User
+// Route::get('/dashboard', [UserController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/users', [UserController::class, "users"])->name('users')->middleware(['auth', 'verified']);
+Route::get('/users/detail/{id}', [UserController::class, "detail"])->name('detail-user')->middleware(['auth', 'verified']);
+Route::get('/users/edit/{id}', [UserController::class, "edit"])->name('edit-user')->middleware(['auth', 'verified']);
+Route::get('/users/delete/{id}', [UserController::class, "delete"])->name('delete-user')->middleware(['auth', 'verified']);
+Route::post('/users/store', [UserController::class, "store"])->name('store-user')->middleware(['auth', 'verified']);
+Route::post('/users/update/{id}', [UserController::class, "update"])->name('update-user')->middleware(['auth', 'verified']);
+Route::delete('/users/destroy/{id}', [UserController::class, "destroy"])->name('destroy-user')->middleware(['auth', 'verified']);
+
+//Products
+Route::get('/user/products', [ProductController::class, "index"])->name('user.products')->middleware(['auth', 'verified']);
+Route::post('/user/products/store', [ProductController::class, "store"])->name('store-product')->middleware(['auth', 'verified']);
+Route::get('/users/products/detail/{id}', [ProductController::class, "detail"])->name('detail-product')->middleware(['auth', 'verified']);
+Route::get('/users/products/edit/{id}', [ProductController::class, "edit"])->name('edit-product')->middleware(['auth', 'verified']);
+Route::get('/users/products/delete/{id}', [ProductController::class, "delete"])->name('delete-product')->middleware(['auth', 'verified']);
+Route::post('/users/products/update/{id}', [ProductController::class, "update"])->name('update-product')->middleware(['auth', 'verified']);
+Route::delete('/users/products/destroy/{id}', [ProductController::class, "destroy"])->name('destroy-product')->middleware(['auth', 'verified']);
+
+// Profile
+Route::post('/profile/update/', [ProfileController::class, "update"])->name('update-profile')->middleware(['auth', 'verified']);
+
 
 //Auth
 Route::get('/login', [AuthController::class, "login"])->name("login");
@@ -47,3 +76,24 @@ Route::post('/email/verification-notification', function (Request $request) {
 
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+//payments
+Route::resource('payment', Webcontroller::class);
+Route::post('/payment_post', [Webcontroller::class,'payment_post']);
+Route::post('/get-snap-token', [Webcontroller::class, 'getSnapToken'])->name('getSnapToken');
+
+
+
+//realtime
+Route::get('/message', function(){
+return view('message');
+});
+
+// Route::post('/bid', function(Request $request) {
+//     BidPlaceEvent::dispatch($request->name, $request->price);
+// })->withoutMiddleware(VerifyCsrfToken::class);
+
+Route::post('/send-message', function(Request $request) {
+    MessageSentEvent::dispatch($request->name, $request->price);
+})->withoutMiddleware(VerifyCsrfToken::class);

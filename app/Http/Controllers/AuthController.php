@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -35,6 +37,16 @@ class AuthController extends Controller
                 return redirect()->back()->with('error', 'Email belum diverifikasi.');
             }
 
+            if(!$user->is_verified){
+                Auth::logout(); // Logout langsung kalau belum verifikasi
+                return redirect()->back()->with('error', 'Email belum diverifikasi oleh admin.');
+            }
+            
+
+            Session::flash('message', [
+                'icon' => 'info',
+                'text' => 'Selamat Datang ' . auth()->user()->name
+            ]);
             // Redirect ke halaman setelah login
             return redirect('/dashboard');
         }
@@ -53,10 +65,19 @@ class AuthController extends Controller
     }
     public function register(Request $request)
     {
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'is_verified' => 1
         ]);
 
         // Login user sementara

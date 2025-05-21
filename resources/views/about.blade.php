@@ -1,4 +1,4 @@
-<x-user>
+<x-guest>
     
     <!-- Start block -->
     <section class="bg-white dark:bg-gray-900">
