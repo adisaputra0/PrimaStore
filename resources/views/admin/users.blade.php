@@ -110,7 +110,7 @@
             <td>
                 <div class="flex items-center justify-center gap-3">
         <!-- DELETE -->
-        {{-- <form action="{{ route('', $user->id) }}" method="POST" onsubmit="return confirm('Yakin mau hapus user ini?')"> --}}
+        {{--     method="POST" onsubmit="return confirm('Yakin mau hapus user ini?')"> --}}
             @csrf
             @method('DELETE')
             <button type="submit">
