@@ -146,67 +146,30 @@
     </div>
     <div class="flex flex-col items-center md:items-start md:justify-start p-5 py-20 md:p-20 mb-4 rounded-sm bg-gray-50 dark:bg-gray-800 dark:text-white">
         <div class="flex justify-between items-center w-[100%] mb-10">
-            <h1 class="dark:text-white font-bold text-5xl">PRODUCTS</h1>
-            <!-- Modal toggle -->
-            @if(auth()->user()->role == "penjual")
-                <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="text-white px-4 py-2 font-semibold bg-green-500 rounded hover:bg-green-700 cursor-pointer" type="button">
-                    + Add Product
-                </button>
-            @endif
+            <h1 class="dark:text-white font-bold text-5xl">TRANSACTIONS</h1>
         </div>
         <div id="container-table">
             <table id="myTable" class="display">
                 <thead>
                     <tr>
                         <th>No</th>
-                        @if(auth()->user()->role == "admin")
-                            <th>User</th>
-                        @endif
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>File</th>
-                        <th>Pictures</th>
-                        <th>Link (Preview)</th>
-                        <th>Action</th>
+                        <th>Buyer</th>
+                        <th>Product</th>
+                        <th>Seller</th>
+                        <th>Amount</th>
+                        <th>Purchased At</th>
                     </tr>
                 </thead>
                 <tbody>
                     
-                    @foreach($products as $index => $product)
+                    @foreach($transactions as $index => $transaction)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            @if(auth()->user()->role == "admin")
-                                <td>{{ $product->user->name }}</td>
-                            @endif
-                            <td>{{ $product->name }}</td>
-                            <td>{{ Str::limit($product->description, 10) }}</td>
-                            <td>{{ $product->price }}PK</td>
-                            <td>{{ $product->category }}</td>
-                            <td>{{ $product->file }}</td>
-                            <td>
-                                @if($product->picture)
-                                    {!! '<img src="' . asset('images/products/' . $product->picture) . '" alt="Image Product" width="100px" class="rounded">' !!}
-                                @else
-                                    {!! '<img src="' . asset('images/product.png') . '" alt="Image Product" width="100px" class="rounded">' !!}
-                                @endif
-                            </td>
-                            <td>{{ Str::limit($product->link, 30) }}</td>
-                            <td>
-                                <div class="flex items-center justify-center gap-3">
-                                    <button id="btn-destroy" data-modal-target="trash" data-modal-toggle="trash" data-id="{{ $product->id }}" class="text-white px-4 py-2 font-semibold bg-red-500 rounded hover:bg-red-700 cursor-pointer" type="button">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                    <button id="btn-edit" data-modal-target="edit" data-modal-toggle="edit" data-id="{{ $product->id }}" class="text-white px-4 py-2 font-semibold bg-orange-500 rounded hover:bg-orange-700 cursor-pointer">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-                                    <button id="btn-detail" data-modal-target="details" data-modal-toggle="details" data-id="{{ $product->id }}" class="text-white px-4 py-2 font-semibold bg-blue-500 rounded hover:bg-blue-700 cursor-pointer" type="button">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                    
-                                </div>
-                            </td>
+                            <td>{{ $transaction->buyer->name }}</td>
+                            <td>{{ $transaction->product->name }}</td>
+                            <td>{{ $transaction->seller->name }}</td>
+                            <td>{{ $transaction->amount }}PK</td>
+                            <td>{{ $transaction->purchased_at }}</td>
                         </tr>
                     @endforeach
                 </tbody>

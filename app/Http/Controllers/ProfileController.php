@@ -44,6 +44,6 @@ class ProfileController extends Controller
             'text' => 'Sukses Edit Profile'
         ]);
 
-        return redirect()->route('users');
+        return redirect()->route('dashboard');
     }
 }

@@ -15,21 +15,39 @@ class UserController extends Controller
 {
     //
     public function index(){
+
+        $total_products = Product::count();  // Menghitung jumlah produk
+        $total_transactions = Transaction::count();  // Menghitung jumlah transaksi
+        $total_coins = Wallet::sum('balance');  // Menghitung jumlah total koin
+        $products = Product::all();
+
+        if(auth()->user()->role == "penjual"){
+            $total_products = Product::where("user_id", auth()->user()->id)->count(); // Menghitung jumlah produk
+            $total_transactions = Transaction::where("seller_id", auth()->user()->id)->count();  // Menghitung jumlah transaksi
+            $total_coins = optional(Wallet::where("user_id", auth()->id())->first())->balance ?? 0;
+            $products = Product::where("user_id", auth()->user()->id)->get();
+        }
+
         return view("user.dashboard")->with([
             "total" => [
                 "total_users" => User::where('role', '!=', 'admin')->count(),  // Menghitung jumlah user
-                "total_products" => Product::count(),  // Menghitung jumlah produk
-                "total_transactions" => Transaction::count(),  // Menghitung jumlah transaksi
-                "total_coins" => Wallet::sum('balance'),  // Menghitung jumlah total koin
+                "total_products" => $total_products,  // Menghitung jumlah produk
+                "total_transactions" => $total_transactions,  // Menghitung jumlah transaksi
+                "total_coins" => $total_coins,  // Menghitung jumlah total koin
                 "total_pembeli" => User::where("role", "pembeli")->count(),
                 "total_penjual" => User::where("role", "penjual")->count()
             ],
-            "users" => User::where('id', '!=', auth()->id())->get(),
+            "products" => $products,
         ]);
     }
     public function users(){
         return view("user.users")->with([
             "users" => User::where('id', '!=', auth()->id())->get(),
+        ]);
+    }
+    public function transactions(){
+        return view("user.transactions")->with([
+            "transactions" => Transaction::all(),
         ]);
     }
     public function detail($id){

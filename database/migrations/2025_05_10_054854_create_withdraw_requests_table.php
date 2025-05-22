@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('withdraw_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // penjual
-            $table->decimal('amount', 12, 2); // jumlah koin yang ditarik
+            $table->integer('amount'); // jumlah koin yang ditarik
             $table->string('bank_name'); // nama bank (misal: BCA, BRI)
             $table->string('bank_account'); // nomor rekening
             $table->string('account_name'); // nama pemilik rekening

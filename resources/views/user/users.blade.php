@@ -180,7 +180,7 @@
                         <th>KTM</th>
                         <th>Is Verified</th>
                         <th>Role</th>
-                        <th>Aksi</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -11,6 +11,11 @@ class ProductController extends Controller
 {
     //
     public function index(){
+        if(auth()->user()->role != 'admin'){
+            return view("user.products")->with([
+                "products" => Product::where('user_id', auth()->user()->id)->get(),
+            ]);
+        }
         return view("user.products")->with([
             "products" => Product::all(),
         ]);
@@ -32,7 +37,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('file')) {
             $fileName = uniqid() . '.' . $request->file->extension();
-            $request->file->move('images/folders', $fileName);
+            $request->file->move('folders', $fileName);
             $validated['file'] = $fileName;
         }
 
@@ -99,13 +104,13 @@ class ProductController extends Controller
         }
 
         if ($request->hasFile('file')) {
-            $file_path = public_path("images/folders/" . $product->file);
+            $file_path = public_path("folders/" . $product->file);
             if(File::exists($file_path)){
                 File::delete($file_path);
             }
 
             $fileName = uniqid() . '.' . $request->file->extension();
-            $request->file->move('images/file/', $fileName);
+            $request->file->move('folders/', $fileName);
             $validated['file'] = $fileName;
         }
 
@@ -132,7 +137,7 @@ class ProductController extends Controller
         }
 
         if ($product->file) {
-            $file_path = public_path("images/folders/" . $product->file);
+            $file_path = public_path("folders/" . $product->file);
             if(File::exists($file_path)){
                 File::delete($file_path);
             }

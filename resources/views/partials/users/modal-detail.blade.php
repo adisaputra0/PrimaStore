@@ -2,9 +2,13 @@
 <!-- Modal body -->
 <div class="p-4 md:p-5 space-y-4 md:flex gap-5">
     @if($user->image)
-        {!! '<img src="' . asset('images/photos/' . $user->image) . '" alt="Profil User" width="200px" class="m-0 h-full rounded object-cover">' !!}
+        <a class="example-image-link" data-title="Profil User" href="{{ asset('images/photos/' . $user->image) }}" data-lightbox="example-1">
+            {!! '<img src="' . asset('images/photos/' . $user->image) . '"  alt="Profil User" width="200px" class="m-0 h-full rounded object-cover">' !!}
+        </a>
     @else
-        {!! '<img src="' . asset('images/user.jpg') . '" alt="Profil User" width="200px" class="m-0 h-full rounded object-cover">' !!}
+        <a class="example-image-link" data-title="Profil User" href="{{ asset('images/user.jpg') }}" data-lightbox="example-1">
+            {!! '<img src="' . asset('images/user.jpg') . '" alt="Profil User" width="200px" class="m-0 h-full rounded object-cover">' !!}
+        </a>
     @endif
     <table class="w-full">
         <tr>
@@ -37,7 +41,10 @@
             <td>KTM</td>
             <td>:
                 @if(isset($user->ktm))
-                    {!! '<img src="' . asset('images/ktm/' . $user->ktm) . '" alt="KTM" width="100px" class="rounded">' !!}
+                    {{-- {!! '<img src="' . asset('images/ktm/' . $user->ktm) . '" alt="KTM" width="100px" class="rounded">' !!} --}}
+                    <a class="example-image-link text-blue-500" data-title="KTM User" href="{{ asset('images/ktm/' . $user->ktm) }}" data-lightbox="example-1">
+                        {{ $user->ktm }}
+                    </a>
                 @else
                     -
                 @endif

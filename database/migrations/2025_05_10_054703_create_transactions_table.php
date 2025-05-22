@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('buyer_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->foreignId('seller_id')->constrained('users')->onDelete('cascade');
-            $table->decimal('amount', 10, 2); // jumlah koin yang dibayar
-            $table->enum('status', ['success', 'pending', 'failed'])->default('pending');
+            $table->integer('amount'); // jumlah koin yang dibayar
+            // $table->enum('status', ['success', 'pending', 'failed'])->default('pending');
             $table->timestamp('purchased_at')->nullable(); // waktu pembelian
             $table->timestamps();
         });

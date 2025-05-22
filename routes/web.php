@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WithdrawController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Laravel\Reverb\Events\MessageSent as EventsMessageSent;
@@ -42,6 +43,17 @@ Route::get('/users/products/edit/{id}', [ProductController::class, "edit"])->nam
 Route::get('/users/products/delete/{id}', [ProductController::class, "delete"])->name('delete-product')->middleware(['auth', 'verified']);
 Route::post('/users/products/update/{id}', [ProductController::class, "update"])->name('update-product')->middleware(['auth', 'verified']);
 Route::delete('/users/products/destroy/{id}', [ProductController::class, "destroy"])->name('destroy-product')->middleware(['auth', 'verified']);
+
+//Transactions
+Route::get('/user/transactions', [UserController::class, "transactions"])->name('transactions')->middleware(['auth', 'verified']);
+
+//Withdraws
+Route::get('/user/withdraws', [WithdrawController::class, "index"])->name('user.withdraws')->middleware(['auth', 'verified']);
+Route::post('/user/withdraws/store', [WithdrawController::class, "store"])->name('store-withdraw')->middleware(['auth', 'verified']);
+Route::get('/users/withdraws/approve/{id}', [WithdrawController::class, "approve"])->name('approve-withdraw')->middleware(['auth', 'verified']);
+Route::post('/users/withdraws/approved/{id}', [WithdrawController::class, "approved"])->name('approved-withdraw')->middleware(['auth', 'verified']);
+Route::get('/users/withdraws/reject/{id}', [WithdrawController::class, "reject"])->name('reject-withdraw')->middleware(['auth', 'verified']);
+Route::post('/users/withdraws/rejected/{id}', [WithdrawController::class, "rejected"])->name('rejected-withdraw')->middleware(['auth', 'verified']);
 
 // Profile
 Route::post('/profile/update/', [ProfileController::class, "update"])->name('update-profile')->middleware(['auth', 'verified']);

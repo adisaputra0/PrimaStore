@@ -2,9 +2,13 @@
 <!-- Modal body -->
 <div class="p-4 md:p-5 space-y-4 md:flex gap-5">
     @if($product->picture)
-        {!! '<img src="' . asset('images/products/' . $product->picture) . '" alt="Profil User" width="200px" class="m-0 h-full rounded object-cover">' !!}
+        <a class="example-image-link" data-title="Product Picture" href="{{ asset('images/products/' . $product->picture) }}" data-lightbox="example-1">
+        {!! '<img src="' . asset('images/products/' . $product->picture) . '" alt="Product Picture" width="200px" class="m-0 h-full rounded object-cover">' !!}
+        </a>
     @else
-        {!! '<img src="' . asset('images/products.png') . '" alt="Profil User" width="200px" class="m-0 h-full rounded object-cover">' !!}
+        <a class="example-image-link" data-title="Product Picture" href="{{ asset('images/product.png') }}" data-lightbox="example-1">
+            {!! '<img src="' . asset('images/product.png') . '" alt="Product Picture" width="200px" class="m-0 h-full rounded object-cover">' !!}
+        </a>
     @endif
     <table class="w-full">
         <tr>
@@ -25,11 +29,22 @@
         </tr>
         <tr>
             <td>File</td>
-            <td>: {{ $product->file }}</td>
+            <td>: 
+                <a href="{{ asset('folders/' . $product->file) }}" class="text-blue-500" download>
+                    {{ $product->file }}
+                </a>
+            </td>
         </tr>
         <tr>
             <td>Link</td>
-            <td><a href="{{ $product->link }}">{{ Str::limit($product->link, 30) }}</a></td>
+            <td>:
+                @if ($product->link)
+                    <a href="{{ $product->link }}" class="text-blue-500" target="_blank">{{ Str::limit($product->link, 30) }}</a>
+                @else
+                    -
+                @endif
+            </td>
+
         </tr>
     </table>
 </div>
