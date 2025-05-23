@@ -12,11 +12,23 @@ class ProductController extends Controller
 {
     //
     public function index(){
+        if(auth()->user()->role == "pembeli"){
+            $products = Product::all();
+            foreach ($products as $product) {
+                $product->reviews = Review::where('product_id', $product->id)->get();
+                $product->average_rating = Review::where('product_id', $product->id)->avg('rating') ?? 0;
+            }
+            return view("user.products")->with([
+                "products" => $products,
+            ]);
+
+        }
         if(auth()->user()->role != 'admin'){
             return view("user.products")->with([
                 "products" => Product::where('user_id', auth()->user()->id)->get(),
             ]);
         }
+
         return view("user.products")->with([
             "products" => Product::all(),
         ]);
@@ -58,12 +70,18 @@ class ProductController extends Controller
 
         return redirect()->route('user.products');
     }
-    public function detail($id){
+    public function detail($id)
+    {
         $product = Product::find($id);
-        $reviews = Review::where("product_id", $id)->get();
+        $reviews = Review::where('product_id', $id)->get();
+
+        // Hitung rata-rata rating, default ke 0 jika tidak ada review
+        $average_rating = Review::where('product_id', $id)->avg('rating') ?? 0;
+
         return view('partials.products.modal-detail')->with([
-            "product" => $product,
-            "reviews" => $reviews,
+            'product' => $product,
+            'reviews' => $reviews,
+            'average_rating' => round($average_rating, 1), // dibulatkan 1 angka di belakang koma
         ]);
     }
     public function edit($id){

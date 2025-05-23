@@ -12,4 +12,9 @@ class Product extends Model
     public $timestamps = true;
 
     protected $guarded = ["id"];
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

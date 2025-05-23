@@ -21,7 +21,7 @@
         </tr>
         <tr>
             <td>Price</td>
-            <td>: {{ $product->price }}PK</td>
+            <td>: <i class="fa-solid fa-coins"></i> {{ $product->price }}PK</td>
         </tr>
         <tr>
             <td>Category</td>
@@ -44,32 +44,59 @@
     </a>
 </div>
 <div class="space-y-4 gap-5">
-    <h3 class="text-2xl font-bold px-4 md:px-5">Reviews ({{ count($reviews) }})</h3>
-    <div class="h-[200px] overflow-auto">
+    @php
+        $fullStars = floor($average_rating); // bintang penuh
+        $halfStar = ($average_rating - $fullStars) >= 0.5; // apakah perlu bintang setengah?
+        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0); // sisa bintang kosong
+    @endphp
+    <h3 class="text-2xl font-bold px-4 md:px-5 flex items-center gap-2">
+        Reviews ({{ count($reviews) }})
+        <span class="text-yellow-400 flex items-center">
+            {{-- Bintang Penuh --}}
+            @for ($i = 0; $i < $fullStars; $i++)
+                <i class="fa-solid fa-star text-amber-400"></i>
+            @endfor
+
+            {{-- Bintang Setengah --}}
+            @if ($halfStar)
+                <i class="fa-solid fa-star-half-stroke text-amber-400"></i>
+            @endif
+
+            {{-- Bintang Kosong --}}
+            @for ($i = 0; $i < $emptyStars; $i++)
+                <i class="fa-regular fa-star text-gray-500"></i>
+            @endfor
+
+            {{-- Angka rata-rata --}}
+            <span class="ml-2 text-white text-sm">({{ number_format($average_rating, 1) }})</span>
+        </span>
+    </h3>
+
+
+    <div class="h-[300px] overflow-auto space-y-4 px-4 md:px-5">
         @forelse ($reviews as $review)
-            <div class="p-4 md:p-5 bg-gray-800 border-b">
-                <div class="flex w-full gap-5">
+            <div class="bg-gray-800 rounded-xl p-4 md:p-5 border border-gray-700 shadow-sm hover:shadow-lg transition">
+                <div class="flex gap-4 items-center">
+                    <img src="{{ asset('images/user.jpg') }}" alt="" class="w-12 h-12 object-cover rounded-full border-2 border-white">
                     <div>
-                        <img src="{{ asset('images/user.jpg') }}" alt="" class="w-[50px] h-[50px] object-cover rounded-full">
-                    </div>
-                    <div>
-                        <p class="font-bold">{{ $review->user->name }}</p>
-                        <p>
+                        <p class="font-semibold text-white">{{ $review->user->name }}</p>
+                        <div>
                             @for ($i = 1; $i <= 5; $i++)
-                                <i class="fa-solid fa-star {{ $i <= $review->rating ? 'text-amber-300' : '' }}"></i>
+                                <i class="fa-solid fa-star {{ $i <= $review->rating ? 'text-amber-300' : 'text-gray-600' }}"></i>
                             @endfor
-                        </p>
+                        </div>
                     </div>
                 </div>
-                <div class="mt-5">
+                <div class="mt-4 text-gray-300">
                     {{ $review->comment }}
                 </div>
             </div>
         @empty
-            <div class="p-4 text-gray-400">Belum ada review.</div>
+            <div class="text-gray-400 text-center mt-5">Belum ada review.</div>
         @endforelse
     </div>
 </div>
+
 
 <!-- Modal footer -->
 {{-- <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
