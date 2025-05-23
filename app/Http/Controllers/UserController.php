@@ -27,6 +27,12 @@ class UserController extends Controller
             $total_coins = optional(Wallet::where("user_id", auth()->id())->first())->balance ?? 0;
             $products = Product::where("user_id", auth()->user()->id)->get();
         }
+        if(auth()->user()->role == "pembeli"){
+            $total_products = Transaction::where("buyer_id", auth()->user()->id)->count(); // Menghitung jumlah produk
+            $total_transactions = Transaction::where("buyer_id", auth()->user()->id)->count();  // Menghitung jumlah transaksi
+            $total_coins = optional(Wallet::where("user_id", auth()->id())->first())->balance ?? 0;
+            $products = Product::where("user_id", auth()->user()->id)->get();
+        }
 
         return view("user.dashboard")->with([
             "total" => [
@@ -46,8 +52,15 @@ class UserController extends Controller
         ]);
     }
     public function transactions(){
+        $transaction = Transaction::all();
+        if(auth()->user()->role == "penjual"){
+            $transaction = Transaction::where("seller_id", auth()->user()->id)->get();
+        }
+        if(auth()->user()->role == "pembeli"){
+            $transaction = Transaction::where("buyer_id", auth()->user()->id)->get();
+        }
         return view("user.transactions")->with([
-            "transactions" => Transaction::all(),
+            "transactions" => $transaction,
         ]);
     }
     public function detail($id){

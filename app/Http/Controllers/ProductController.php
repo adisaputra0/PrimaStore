@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Review;
 use App\Models\Product;
-use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
@@ -59,8 +60,10 @@ class ProductController extends Controller
     }
     public function detail($id){
         $product = Product::find($id);
+        $reviews = Review::where("product_id", $id)->get();
         return view('partials.products.modal-detail')->with([
-            "product" => $product
+            "product" => $product,
+            "reviews" => $reviews,
         ]);
     }
     public function edit($id){
