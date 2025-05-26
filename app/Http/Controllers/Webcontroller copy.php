@@ -16,42 +16,43 @@ class WebController extends Controller
     public function index()
     {
         return view("user.coins");
+        // return view("user.payment");
     }
 
     public function getSnapToken(Request $request)
-    {
-        Config::$serverKey = env('SERVER_KEY');
-        Config::$isProduction = false;
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+{
+    Config::$serverKey = env('SERVER_KEY');
+    Config::$isProduction = false;
+    Config::$isSanitized = true;
+    Config::$is3ds = true;
 
-        $user = Auth::user();
-        $phone = $request->input('phone');
-        $items = $request->input('items');
+    $user = Auth::user();
+    $phone = $request->input('phone');
+    $items = $request->input('items');
 
-        $orderId = "ORDER-" . rand(100000, 999999);
-        $grossAmount = collect($items)->sum('subtotal');
+    $orderId = "ORDER-" . rand(100000, 999999);
+    $grossAmount = collect($items)->sum('subtotal');
 
-        $params = [
-            'transaction_details' => [
-                'order_id' => $orderId,
-                'gross_amount' => $grossAmount,
-            ],
-            'item_details' => $items,
-            'customer_details' => [
-                'first_name' => $user->name,
-                'email' => $user->email,
-                'phone' => $phone,
-            ],
-        ];
+    $params = [
+        'transaction_details' => [
+            'order_id' => $orderId,
+            'gross_amount' => $grossAmount,
+        ],
+        'item_details' => $items,
+        'customer_details' => [
+            'first_name' => $user->name,
+            'email' => $user->email,
+            'phone' => $phone,
+        ],
+    ];
 
-        try {
-            $snapToken = Snap::getSnapToken($params);
-            return response()->json(['snap_token' => $snapToken, 'order_id' => $orderId]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal mendapatkan token: ' . $e->getMessage()], 500);
-        }
+    try {
+        $snapToken = Snap::getSnapToken($params);
+        return response()->json(['snap_token' => $snapToken, 'order_id' => $orderId]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Gagal mendapatkan token: ' . $e->getMessage()], 500);
     }
+}
 
     public function payment_post(Request $request)
     {
@@ -98,24 +99,37 @@ class WebController extends Controller
 
         // Simpan data
         if ($order->save()) {
+            // return redirect('/')->with('alert-success', 'Order berhasil disimpan.');
             $wallet_buyer = Wallet::where("user_id", auth()->user()->id)->first();
 
-            // Cek apakah ada saldo
-            if ($wallet_buyer) {
-                $wallet_buyer->update([
-                    "balance" => $wallet_buyer->balance + (intval($order->gross_amount)/1000)
+            // Cek apakah saldo cukup
+            if (!$wallet_buyer) {
+                Wallet::create([
+                    "user_id" => $product->user->id,
+                    "balance" => $validated['amount']
                 ]);
             }else{
-                Wallet::create([
-                    "user_id" => auth()->user()->id,
-                    "balance" => (intval($order->gross_amount)/1000)
+                $wallet_buyer->update([
+                    "balance" => $wallet_buyer->balance + $validated['amount']
                 ]);
             }
+
             
-            return redirect('/')->with('alert-success', 'Order berhasil disimpan.');
+            Session::flash('message', [
+                'icon' => 'success',
+                'text' => 'Berhasil topup'
+            ]);
+            return redirect()->route('user.coins');
         } else {
-            return redirect('/')->with('alert-failed', 'Terjadi kesalahan saat menyimpan order.');
+            // return redirect('/')->with('alert-failed', 'Terjadi kesalahan saat menyimpan order.');
+            Session::flash('message', [
+                'icon' => 'error',
+                'text' => 'Terjadi kesalahan saat topup'
+            ]);
+            return redirect()->route('user.coins');
         }
+
+
     }
 
 

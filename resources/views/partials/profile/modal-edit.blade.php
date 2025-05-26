@@ -7,7 +7,7 @@
         @if(isset($user->image))
             {!! '<img src="' . asset('images/photos/' . $user->image) . '" alt="Profil User" width="200px" class="m-0 h-full rounded object-cover">' !!}
         @else
-            -
+            {!! '<img src="' . asset('images/user.jpg') . '" alt="Profil User" width="200px" class="m-0 h-full rounded object-cover">' !!}
         @endif
         <div class="grid gap-4 mb-4 grid-cols-2">
             <div>

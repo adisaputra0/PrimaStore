@@ -140,41 +140,36 @@
     <script>
         $(document).ready(function () {
             // Pastikan elemen #transaksiChart ada sebelum membuat grafik transaksi
+            const allTransactions = @json($transactions);
+            const monthlyTransactions = Array(12).fill(0); // Buat array isi 0 sebanyak 12 bulan
+
+            allTransactions.forEach(trans => {
+                const date = new Date(trans.purchased_at);
+                const month = date.getMonth(); // 0 = Januari, 1 = Februari, dst
+                monthlyTransactions[month]++;
+            });
             let ctxTransaksi = document.getElementById('transaksiChart');
             if (ctxTransaksi) {
                 const transaksiChart = new Chart(ctxTransaksi.getContext('2d'), {
                     type: 'bar',
                     data: {
-                    labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni'],
-                    datasets: [{
-                        label: 'Jumlah Transaksi',
-                        data: [120, 190, 300, 500, 220, 330],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                        datasets: [{
+                            label: 'Jumlah Transaksi',
+                            data: monthlyTransactions,
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
                     },
                     options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                precision: 0
+                            }
                         }
-                    }
                     }
                 });
             }

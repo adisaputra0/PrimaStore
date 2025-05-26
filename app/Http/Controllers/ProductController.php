@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Review;
 use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
@@ -33,6 +34,34 @@ class ProductController extends Controller
             "products" => Product::all(),
         ]);
     }
+    // public function purchased(){
+    //     $transaction = Transaction::where("buyer_id", auth()->user()->id)->get();
+    //     $products = $transaction->product;
+    //     foreach ($products as $product) {
+    //         $product->reviews = Review::where('product_id', $product->id)->get();
+    //         $product->average_rating = Review::where('product_id', $product->id)->avg('rating') ?? 0;
+    //     }
+    //     return view("user.purchased")->with([
+    //         "products" => $products,
+    //     ]);
+    // }
+    public function purchased() {
+        $transactions = Transaction::where('buyer_id', auth()->id())->get();
+
+        $products = $transactions->map(function ($transaction) {
+            $product = $transaction->product; // pastikan ada relasi `product()` di model Transaction
+            if ($product) {
+                $product->reviews = Review::where('product_id', $product->id)->get();
+                $product->average_rating = Review::where('product_id', $product->id)->avg('rating') ?? 0;
+            }
+            return $product;
+        })->filter(); // menghapus null jika tidak ada produk
+
+        return view('user.purchased', [
+            'products' => $products
+        ]);
+    }
+
     
     public function store(Request $request)
     {
@@ -77,6 +106,11 @@ class ProductController extends Controller
 
         // Hitung rata-rata rating, default ke 0 jika tidak ada review
         $average_rating = Review::where('product_id', $id)->avg('rating') ?? 0;
+        $product->purchased = true;
+
+        if(auth()->user()->role == "pembeli"){
+            $product->purchased = Transaction::where("buyer_id", auth()->user()->id)->where("product_id", $id)->first()? true : false;
+        }
 
         return view('partials.products.modal-detail')->with([
             'product' => $product,

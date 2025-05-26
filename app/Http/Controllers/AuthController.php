@@ -92,4 +92,38 @@ class AuthController extends Controller
     public function register_seller(){
         return view("auth.register_seller");
     }
+
+    public function post_seller(Request $request){
+        
+        // Validasi input
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed|min:8',
+            'ktm' => 'image|mimes:jpeg,png,jpg',
+            'phone' => 'nullable|string|max:15',
+        ]);
+
+        // Handle password
+        $validated['password'] = bcrypt($validated['password']);
+        $validated['role'] = "penjual";
+
+        // Handle ktm
+        if ($request->hasFile('ktm')) {
+            $ktmName = uniqid() . '.' . $request->ktm->extension();
+            $request->ktm->move('images/ktm', $ktmName);
+            $validated['ktm'] = $ktmName;
+        }
+
+        // Simpan ke database
+        $user = User::create($validated);
+
+        // Login user sementara
+        auth()->login($user);
+
+        // Kirim email verifikasi
+        $user->sendEmailVerificationNotification();
+
+        return redirect()->route('verification.notice');
+    }
 }

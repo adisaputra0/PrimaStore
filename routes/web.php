@@ -9,9 +9,11 @@ use App\Http\Controllers\Webcontroller;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WithdrawController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Laravel\Reverb\Events\MessageSent as EventsMessageSent;
@@ -44,8 +46,15 @@ Route::get('/users/products/delete/{id}', [ProductController::class, "delete"])-
 Route::post('/users/products/update/{id}', [ProductController::class, "update"])->name('update-product')->middleware(['auth', 'verified']);
 Route::delete('/users/products/destroy/{id}', [ProductController::class, "destroy"])->name('destroy-product')->middleware(['auth', 'verified']);
 
+//Purchased
+Route::get('/user/purchased', [ProductController::class, "purchased"])->name('user.purchased')->middleware(['auth', 'verified']);
+
 //Transactions
-Route::get('/user/transactions', [UserController::class, "transactions"])->name('transactions')->middleware(['auth', 'verified']);
+Route::get('/user/transactions', [TransactionController::class, "index"])->name('transactions')->middleware(['auth', 'verified']);
+Route::post('/user/transaction/store/{id}', [TransactionController::class, "store"])->name('store-transaction')->middleware(['auth', 'verified']);
+
+//Review
+Route::post('/user/review/store/{id}', [ReviewController::class, "store"])->name('store-review')->middleware(['auth', 'verified']);
 
 //Withdraws
 Route::get('/user/withdraws', [WithdrawController::class, "index"])->name('user.withdraws')->middleware(['auth', 'verified']);
@@ -66,6 +75,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::post('/register', [AuthController::class, "register"])->name("register");
 Route::get('/seller/register', [AuthController::class, "register_seller"])->name("regitser-seller");
+Route::post('/seller/register', [AuthController::class, "post_seller"])->name("post-seller");
 
 
 // Route untuk handle verifikasi email

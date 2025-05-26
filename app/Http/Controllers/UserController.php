@@ -44,23 +44,12 @@ class UserController extends Controller
                 "total_penjual" => User::where("role", "penjual")->count()
             ],
             "products" => $products,
+            "transactions" => Transaction::all()
         ]);
     }
     public function users(){
         return view("user.users")->with([
             "users" => User::where('id', '!=', auth()->id())->get(),
-        ]);
-    }
-    public function transactions(){
-        $transaction = Transaction::all();
-        if(auth()->user()->role == "penjual"){
-            $transaction = Transaction::where("seller_id", auth()->user()->id)->get();
-        }
-        if(auth()->user()->role == "pembeli"){
-            $transaction = Transaction::where("buyer_id", auth()->user()->id)->get();
-        }
-        return view("user.transactions")->with([
-            "transactions" => $transaction,
         ]);
     }
     public function detail($id){

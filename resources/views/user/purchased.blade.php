@@ -55,11 +55,7 @@
                                 <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
                                 <select id="category" name="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     <option value="Website">Website</option>
-                                    <option value="Artikel">Artikel</option>
-                                    <option value="Video">Video</option>
-                                    <option value="Desain">Desain</option>
-                                    <option value="Musik">Musik</option>
-                                    <option value="Foto">Foto</option>
+                                    <option value="Buku">Buku</option>
                                 </select>
                             </div>
                             <div>
@@ -151,7 +147,7 @@
     @if(auth()->user()->role == "admin" || auth()->user()->role == "penjual")
         <div class="flex flex-col items-center md:items-start md:justify-start p-5 py-20 md:p-20 mb-4 rounded-sm bg-gray-50 dark:bg-gray-800 dark:text-white">
             <div class="flex justify-between items-center w-[100%] mb-10">
-                <h1 class="dark:text-white font-bold text-5xl">PRODUCTS</h1>
+                <h1 class="dark:text-white font-bold text-5xl">PURCHASED </h1>
                 <!-- Modal toggle -->
                 @if(auth()->user()->role == "penjual")
                     <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="text-white px-4 py-2 font-semibold bg-green-500 rounded hover:bg-green-700 cursor-pointer" type="button">
@@ -221,7 +217,7 @@
     @else
         <div class="flex flex-col items-center md:items-start md:justify-start p-5 py-20 md:p-20 mb-4 rounded-sm bg-gray-50 dark:bg-gray-800 dark:text-white">
             <div class="flex justify-between items-center w-[100%] mb-10">
-                <h1 class="dark:text-white font-bold text-5xl">PRODUCTS</h1>
+                <h1 class="dark:text-white font-bold text-5xl">PURCHASED</h1>
             </div>
             <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 w-full">
                 @foreach ($products as $product)

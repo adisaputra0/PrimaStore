@@ -125,7 +125,7 @@
                             .then(res => res.json())
                             .then(response => {
                                 alert(response.success || response.error);
-                                console.log("testttttttttttt");
+                                window.location.href = '/';
                             });
                         },
                         onPending: function(result) {
