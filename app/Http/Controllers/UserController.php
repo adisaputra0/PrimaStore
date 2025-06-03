@@ -31,7 +31,6 @@ class UserController extends Controller
             $total_products = Transaction::where("buyer_id", auth()->user()->id)->count(); // Menghitung jumlah produk
             $total_transactions = Transaction::where("buyer_id", auth()->user()->id)->count();  // Menghitung jumlah transaksi
             $total_coins = optional(Wallet::where("user_id", auth()->id())->first())->balance ?? 0;
-            $products = Product::where("user_id", auth()->user()->id)->get();
         }
 
         return view("user.dashboard")->with([
