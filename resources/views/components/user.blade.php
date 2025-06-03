@@ -4,7 +4,10 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Dashboard</title>
-   @vite('resources/css/app.css')
+   
+    <link rel="stylesheet" href="{{ asset('build/assets/app-BTX1j_4h.css') }}">
+    <script src="{{ asset('build/assets/app-app-Dt-y7uyJ.js') }}"></script>
+   {{-- @vite('resources/css/app.css') --}}
    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
    {{-- Toast --}}
    <link rel="stylesheet" href="{{ asset('toast-notification/style.css') }}">
