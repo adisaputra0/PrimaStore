@@ -28,22 +28,22 @@
     <section class="bg-white dark:bg-gray-900">
         <div class="max-w-screen-xl px-4 py-8 mx-auto lg:pb-16" data-aos="fade" data-aos-duration="700">
             <div class="grid grid-cols-2 gap-8 text-gray-500 sm:gap-12 sm:grid-cols-3 lg:grid-cols-6 dark:text-gray-400">
-                <a href="{{ route('products') }}" class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
+                <a class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
                     <i class="fa-solid fa-globe"></i> Website
                 </a>
-                <a href="{{ route('products') }}" class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
+                <a class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
                     <i class="fa-solid fa-newspaper"></i> Artikel
                 </a>
-                <a href="{{ route('products') }}" class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
+                <a class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
                     <i class="fa-solid fa-video"></i> Video
                 </a>
-                <a href="{{ route('products') }}" class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
+                <a class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
                     <i class="fa-solid fa-swatchbook"></i> Desain
                 </a>
-                <a href="{{ route('products') }}" class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
+                <a class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
                     <i class="fa-solid fa-music"></i> Musik
                 </a>
-                <a href="{{ route('products') }}" class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
+                <a class=" text-3xl font-bold flex items-center lg:justify-center gap-2">
                     <i class="fa-solid fa-image"></i> Foto
                 </a>
             </div>
