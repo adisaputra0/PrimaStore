@@ -16,10 +16,10 @@
 
     -   Top up koin (via QRIS/Midtrans)
     -   Beli dan unduh produk digital
-    -   Beri ulasan & chat dengan penjual
+    -   Beri ulasan
 
 -   🛠️ **Admin**
-    -   Verifikasi penjual dan produk
+    -   Verifikasi penjual
     -   Kelola top up dan withdraw
     -   Pantau transaksi & aktivitas pengguna
 
@@ -43,7 +43,6 @@
 -   `topups` – Riwayat top up koin
 -   `withdraw_requests` – Penarikan koin ke uang
 -   `reviews` – Penilaian produk
--   `chats` – Chat antar user
 
 ---
 
