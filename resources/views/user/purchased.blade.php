@@ -279,9 +279,10 @@
     @endif
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        
         $(document).on('click', '#btn-detail', function() {
             let id = $(this).data('id');
-            let url = "{{ route('detail-product', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/products/detail/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu
@@ -315,7 +316,7 @@
         
         $(document).on('click', '#btn-edit', function() {
             let id = $(this).data('id');
-            let url = "{{ route('edit-product', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/products/edit/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu
@@ -333,7 +334,7 @@
         
         $(document).on('click', '#btn-destroy', function() {
             let id = $(this).data('id');
-            let url = "{{ route('delete-product', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/products/delete/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu

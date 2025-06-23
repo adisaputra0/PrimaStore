@@ -285,7 +285,7 @@
     <script>
         $(document).on('click', '#btn-detail', function() {
             let id = $(this).data('id');
-            let url = "{{ route('detail-product', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/products/detail/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu
@@ -319,7 +319,7 @@
         
         $(document).on('click', '#btn-edit', function() {
             let id = $(this).data('id');
-            let url = "{{ route('edit-product', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/products/edit/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu
@@ -337,7 +337,7 @@
         
         $(document).on('click', '#btn-destroy', function() {
             let id = $(this).data('id');
-            let url = "{{ route('delete-product', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/products/delete/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu

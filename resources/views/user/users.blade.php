@@ -230,9 +230,10 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        
         $(document).on('click', '#btn-detail', function() {
             let id = $(this).data('id');
-            let url = "{{ route('detail-user', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/detail/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu
@@ -240,6 +241,22 @@
                 success: function(response) {
                     $('#modal-body').html(response); // Masukkan ke modal
                     // $('#myModal').show();
+                    
+                    let stars = document.querySelectorAll('#starRating .star');
+                    let ratingInput = document.getElementById('rating');
+
+                    stars.forEach((star, index) => {
+                        star.addEventListener('click', () => {
+                            let rating = index + 1;
+                            ratingInput.value = rating;
+
+                            // Update warna bintang
+                            stars.forEach((s, i) => {
+                                s.classList.toggle('text-yellow-400', i < rating);
+                                s.classList.toggle('text-gray-500', i >= rating);
+                            });
+                        });
+                    });
                 },
                 error: function(err) {
                     alert('Gagal mengambil data!');
@@ -250,7 +267,7 @@
         
         $(document).on('click', '#btn-edit', function() {
             let id = $(this).data('id');
-            let url = "{{ route('edit-user', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/edit/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu
@@ -268,7 +285,7 @@
         
         $(document).on('click', '#btn-destroy', function() {
             let id = $(this).data('id');
-            let url = "{{ route('delete-user', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/delete/" + id;
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu

@@ -163,7 +163,8 @@
     <script>
         $(document).on('click', '#btn-edit', function() {
             let id = $(this).data('id');
-            let url = "{{ route('approve-withdraw', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/withdraws/approve/" + id;
+            // let url = "{{ route('approve-withdraw', ['id' => '__id__']) }}".replace('__id__', id);
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu
@@ -181,7 +182,8 @@
         
         $(document).on('click', '#btn-destroy', function() {
             let id = $(this).data('id');
-            let url = "{{ route('reject-withdraw', ['id' => '__id__']) }}".replace('__id__', id);
+            let url = window.location.origin + "/users/withdraws/reject/" + id;
+            // let url = "{{ route('reject-withdraw', ['id' => '__id__']) }}".replace('__id__', id);
             // Panggil server via AJAX
             $.ajax({
                 url: url, // sesuaikan dengan route kamu
