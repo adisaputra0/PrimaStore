@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Run</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="asset/run1.png" type="image/x-icon">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Main -->
+        <div id="game" style="display: none;">
+            <div id="header">
+                <div id="txtName">
+                    <h1>Adi</h1>
+                </div>
+                <div id="txtScore">
+                    <h1 id="score">20</h1>
+                </div>
+            </div>
+            <img src="asset/run1.png" id="character">
+            <img src="asset/redbox.png" id="obstacle">
+        </div>
+
+        <!-- CountDown -->
+        <div id="countDown" style="display: none;">
+            3
+        </div>
+
+        <!-- Pause -->
+        <div id="pause" style="display: none;">
+            Pause
+        </div>
+
+        <!-- Game Over -->
+        <div id="gameOver" style="display: none;">
+            Game Over
+            <button onclick="restart()">Restart</button>
+        </div>
+
+        <!-- Main Menu -->
+        <div class="cMenu">
+            <div class="menu">
+                <img src="asset/run1.png" alt="icon" width="100px">
+                <h1>Dino Run</h1>
+                <input type="text" id="name" placeholder="Your Name" autofocus oninput="check()">
+                <button onclick="showInstruction()">Instruction</button>
+                <button id="play" disabled onclick="start()">Play Game!</button>
+            </div>
+            <div class="menu instruction">
+                <img src="asset/run1.png" alt="icon" width="100px">
+                <h1>Instruction</h1>
+                <ol>
+                    <li>You must to fill "Name" field and click "Play Game" button to start this game</li>
+                    <li>You must to avoid many obstacle</li>
+                    <li>You can click "Space" to jump</li>
+                </ol>
+                <button id="close" onclick="unshowInstruction()">
+                    X
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="js/game.js"></script>
+    <script src="js/container.js"></script>
+    <script src="js/character.js"></script>
+    <script src="js/score.js"></script>
+    <script src="js/obstacle.js"></script>
+    <script src="js/countDown.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

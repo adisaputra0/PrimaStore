@@ -2,54 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Midtrans\Config;
 use Midtrans\Snap;
+use Midtrans\Config;
+use App\Models\Order;
+use App\Models\Wallet;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class WebController extends Controller
 {
     public function index()
     {
-        return view("admin.payment");
+        return view("user.coins");
     }
 
     public function getSnapToken(Request $request)
-{
-    Config::$serverKey = env('SERVER_KEY');
-    Config::$isProduction = false;
-    Config::$isSanitized = true;
-    Config::$is3ds = true;
+    {
+        Config::$serverKey = env('SERVER_KEY');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
 
-    $user = Auth::user();
-    $phone = $request->input('phone');
-    $items = $request->input('items');
+        $user = Auth::user();
+        $phone = $request->input('phone');
+        $items = $request->input('items');
 
-    $orderId = "ORDER-" . rand(100000, 999999);
-    $grossAmount = collect($items)->sum('subtotal');
+        $orderId = "ORDER-" . rand(100000, 999999);
+        $grossAmount = collect($items)->sum('subtotal');
 
-    $params = [
-        'transaction_details' => [
-            'order_id' => $orderId,
-            'gross_amount' => $grossAmount,
-        ],
-        'item_details' => $items,
-        'customer_details' => [
-            'first_name' => $user->name,
-            'email' => $user->email,
-            'phone' => $phone,
-        ],
-    ];
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderId,
+                'gross_amount' => $grossAmount,
+            ],
+            'item_details' => $items,
+            'customer_details' => [
+                'first_name' => $user->name,
+                'email' => $user->email,
+                'phone' => $phone,
+            ],
+        ];
 
-    try {
-        $snapToken = Snap::getSnapToken($params);
-        return response()->json(['snap_token' => $snapToken, 'order_id' => $orderId]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Gagal mendapatkan token: ' . $e->getMessage()], 500);
+        try {
+            $snapToken = Snap::getSnapToken($params);
+            return response()->json(['snap_token' => $snapToken, 'order_id' => $orderId]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal mendapatkan token: ' . $e->getMessage()], 500);
+        }
     }
-}
 
     public function payment_post(Request $request)
     {
@@ -96,12 +98,24 @@ class WebController extends Controller
 
         // Simpan data
         if ($order->save()) {
+            $wallet_buyer = Wallet::where("user_id", auth()->user()->id)->first();
+
+            // Cek apakah ada saldo
+            if ($wallet_buyer) {
+                $wallet_buyer->update([
+                    "balance" => $wallet_buyer->balance + (intval($order->gross_amount)/1000)
+                ]);
+            }else{
+                Wallet::create([
+                    "user_id" => auth()->user()->id,
+                    "balance" => (intval($order->gross_amount)/1000)
+                ]);
+            }
+            
             return redirect('/')->with('alert-success', 'Order berhasil disimpan.');
         } else {
             return redirect('/')->with('alert-failed', 'Terjadi kesalahan saat menyimpan order.');
         }
-
-
     }
 
 
